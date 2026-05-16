@@ -32,17 +32,34 @@ This app is configured as a **Node.js** site on Azure App Service: Oryx runs `np
 
 | Setting | Value |
 |--------|--------|
-| `SCM_DO_BUILD_DURING_DEPLOYMENT` | `true` |
+| `SCM_DO_BUILD_DURING_DEPLOYMENT` | `false` when using GitHub Actions (build runs in CI); `true` if deploying source only |
 | `WEBSITE_NODE_DEFAULT_VERSION` | `~20` |
 
 See `azure-app-settings.template.json` for a reference list.
 
-### 3. Deploy from GitHub (recommended)
+### 3. Deploy from GitHub Actions (recommended)
 
-1. In Azure Portal: Web App → **Deployment Center** → GitHub Actions, or download the **Publish Profile**.
-2. In GitHub: repo **Settings → Secrets** → add `AZURE_WEBAPP_PUBLISH_PROFILE` (paste publish profile XML).
-3. Optionally set repository variable `AZURE_WEBAPP_NAME` to your app name (default in workflow: `nthangeni-electrical`).
-4. Push to `main` — workflow `.github/workflows/azure-webapp.yml` builds and deploys.
+Workflow: [`.github/workflows/main_nthangenielectrical.yml`](.github/workflows/main_nthangenielectrical.yml)
+
+1. In Azure Portal: Web App **nthangenielectrical** → **Deployment Center** → connect GitHub (this creates OIDC secrets in the repo).
+2. Push to `main` — the workflow builds with `npm ci`, prunes dev dependencies, and deploys to the app.
+
+**If deploy fails with “No subscriptions found”** (Azure login step):
+
+The service principal from Deployment Center needs access to your subscription:
+
+1. Azure Portal → **Subscriptions** → your subscription → **Access control (IAM)** → **Add role assignment**
+2. Role: **Contributor** (or **Website Contributor** on the resource group / web app)
+3. Members: **User, group, or service principal** → search for the app name (e.g. `nthangenielectrical`) or the client ID from GitHub secret `AZUREAPPSERVICE_CLIENTID_*`
+4. Save, then re-run the failed workflow under **Actions**
+
+**App settings when CI builds the site:**
+
+| Setting | Value |
+|--------|--------|
+| `SCM_DO_BUILD_DURING_DEPLOYMENT` | `false` |
+
+The GitHub workflow already runs `npm run build`; Oryx should not rebuild on deploy.
 
 ### 4. Deploy with Azure CLI (zip)
 
