@@ -1,73 +1,61 @@
-# React + TypeScript + Vite
+# Nthangeni Electrical & Plumbing
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Marketing website for Nthangeni Electrical & Plumbing — React, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Production build (local)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm start
 ```
+
+Open `http://localhost:8080` (or the port in `PORT`).
+
+## Deploy to Azure Web App
+
+This app is configured as a **Node.js** site on Azure App Service: Oryx runs `npm run build`, then **`npm start`** serves the `dist` folder with SPA routing.
+
+### 1. Create the Web App (Azure Portal or CLI)
+
+- **Runtime stack:** Node 20 LTS  
+- **OS:** Linux (recommended) or Windows  
+- **Startup command:** `npm start`
+
+### 2. Application settings (Portal → Configuration)
+
+| Setting | Value |
+|--------|--------|
+| `SCM_DO_BUILD_DURING_DEPLOYMENT` | `true` |
+| `WEBSITE_NODE_DEFAULT_VERSION` | `~20` |
+
+See `azure-app-settings.template.json` for a reference list.
+
+### 3. Deploy from GitHub (recommended)
+
+1. In Azure Portal: Web App → **Deployment Center** → GitHub Actions, or download the **Publish Profile**.
+2. In GitHub: repo **Settings → Secrets** → add `AZURE_WEBAPP_PUBLISH_PROFILE` (paste publish profile XML).
+3. Optionally set repository variable `AZURE_WEBAPP_NAME` to your app name (default in workflow: `nthangeni-electrical`).
+4. Push to `main` — workflow `.github/workflows/azure-webapp.yml` builds and deploys.
+
+### 4. Deploy with Azure CLI (zip)
+
+```bash
+npm ci
+npm run build
+az webapp deploy --resource-group <rg> --name <app-name> --src-path . --type zip
+```
+
+Ensure startup command is `npm start`.
+
+### Notes
+
+- `public/web.config` is copied into `dist/` for IIS/Windows static hosting and SPA fallback.
+- `server.js` uses the `PORT` environment variable provided by Azure.
+- Images and assets live under `public/` and are included in the build output.
