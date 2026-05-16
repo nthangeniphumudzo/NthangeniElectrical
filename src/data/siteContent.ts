@@ -10,16 +10,16 @@ import type {
 
 export const siteConfig = {
   name: "Nthangeni Electrical & Plumbing",
-  phone: "060 372 7577",
-  phoneHref: "tel:0603727577",
-  phoneSecondary: "079 588 5713",
-  phoneSecondaryHref: "tel:0795885713",
+  phone: "079 814 4681",
+  phoneHref: "tel:0798144681",
+  phoneSecondary: "065 699 4361",
+  phoneSecondaryHref: "tel:0656994361",
   email: "nthangenielectricalandplumbing@gmail.com",
   address: "466 Sekhwiri Street, Meadowlands Zone 8",
   addressLine2: "Johannesburg",
   location: "Meadowlands, Johannesburg",
   whatsappHref:
-    "https://wa.me/27603727577?text=Hi%2C+I%27d+like+a+quote+from+Nthangeni+Electrical+and+Plumbing",
+    "https://wa.me/27798144681?text=Hi%2C+I%27d+like+a+quote+from+Nthangeni+Electrical+and+Plumbing",
   jobsCompleted: "300+",
 } as const;
 
