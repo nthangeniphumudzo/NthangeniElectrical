@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Syne", sans-serif;
+
+  --color-brand-yellow: #f5a800;
+  --color-brand-yellow-dark: #c98900;
+  --color-brand-blue: #1a56db;
+  --color-brand-blue-dark: #1240a8;
+
+  --color-surface: var(--theme-surface);
+  --color-surface-muted: var(--theme-surface-muted);
+  --color-surface-elevated: var(--theme-surface-elevated);
+  --color-surface-invert: var(--theme-surface-invert);
+
+  --color-foreground: var(--theme-foreground);
+  --color-foreground-muted: var(--theme-foreground-muted);
+  --color-foreground-secondary: var(--theme-foreground-secondary);
+
+  --color-border: var(--theme-border);
+  --color-border-strong: var(--theme-border-strong);
+
+  --color-accent: var(--theme-accent-bg);
+  --color-accent-foreground: var(--theme-accent-fg);
+
+  --color-nav: var(--theme-nav);
+
+  --color-on-invert: var(--theme-on-invert);
+  --color-on-invert-muted: var(--theme-on-invert-muted);
+}
+
+:root,
+[data-theme="light"] {
+  --theme-surface: #ffffff;
+  --theme-surface-muted: #f4f6fb;
+  --theme-surface-elevated: #ffffff;
+  --theme-surface-invert: #111318;
+
+  --theme-foreground: #111318;
+  --theme-foreground-muted: #6b7289;
+  --theme-foreground-secondary: #3d4452;
+
+  --theme-border: #e4e7ef;
+  --theme-border-strong: #cdd2de;
+
+  --theme-accent-bg: #ebf1ff;
+  --theme-accent-fg: #1a56db;
+
+  --theme-nav: rgba(255, 255, 255, 0.88);
+  --theme-hero-gradient: linear-gradient(
+    135deg,
+    #f8f9fc 0%,
+    #ebf1ff 50%,
+    #fff9eb 100%
+  );
+  --theme-card-shadow: 0 4px 24px rgba(17, 19, 24, 0.06);
+  --theme-card-shadow-lg: 0 20px 50px rgba(17, 19, 24, 0.1);
+
+  --theme-on-invert: #f2f4f8;
+  --theme-on-invert-muted: #b8bec9;
+  --theme-on-invert-border: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] {
+  --theme-surface: #0c0e13;
+  --theme-surface-muted: #141820;
+  --theme-surface-elevated: #1c2130;
+  --theme-surface-invert: #f4f5f7;
+
+  --theme-foreground: #f2f4f8;
+  --theme-foreground-muted: #94a0b8;
+  --theme-foreground-secondary: #c5cdd9;
+
+  --theme-border: #2a3142;
+  --theme-border-strong: #3d465c;
+
+  --theme-accent-bg: rgba(26, 86, 219, 0.18);
+  --theme-accent-fg: #6b9fff;
+
+  --theme-nav: rgba(12, 14, 19, 0.92);
+  --theme-hero-gradient: linear-gradient(
+    135deg,
+    #0c0e13 0%,
+    #141a28 50%,
+    #1a1508 100%
+  );
+  --theme-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --theme-card-shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.45);
+
+  --theme-on-invert: #111318;
+  --theme-on-invert-muted: #5c6578;
+  --theme-on-invert-border: rgba(17, 19, 24, 0.1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply font-sans text-base text-foreground bg-surface overflow-x-hidden antialiased transition-colors duration-300;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .animate-marquee {
+      animation: none;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .container-app {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .section-pad {
+    @apply py-14 sm:py-20 lg:py-24;
+  }
+
+  /* Minimum 44×44px touch target (WCAG / mobile best practice) */
+  .touch-target {
+    @apply inline-flex min-h-11 min-w-11 items-center justify-center;
+    touch-action: manipulation;
+  }
+
+  .main-with-mobile-bar {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 1024px) {
+    .main-with-mobile-bar {
+      padding-bottom: 0;
+    }
+  }
+
+  .card-surface {
+    @apply rounded-2xl border border-border bg-surface-elevated;
+    box-shadow: var(--theme-card-shadow);
+  }
+
+  .panel-invert {
+    @apply rounded-2xl border text-on-invert;
+    background: var(--theme-surface-invert);
+    border-color: var(--theme-on-invert-border);
+    box-shadow: var(--theme-card-shadow-lg);
+  }
+
+  .hero-bg {
+    background: var(--theme-hero-gradient);
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 28s linear infinite;
+  }
+
+  .reveal {
+    @apply translate-y-6 opacity-0 transition-all duration-700 ease-out;
+  }
+
+  .reveal.in {
+    @apply translate-y-0 opacity-100;
+  }
+}
